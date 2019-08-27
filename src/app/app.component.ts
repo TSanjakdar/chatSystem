@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SocketService } from './services/socket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,17 +8,28 @@ import { SocketService } from './services/socket.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private socketService: SocketService){}
+  constructor(private socketService: SocketService, private router: Router){}
   
-  username = '';
+  user = {};
+  inGroup = '';
+  channels = [];
+  group = '';
+  channelList = '';
 
   ngOnInit() {
-    this.username = sessionStorage.getItem('username');
+    this.socketService.getUser((user) => {this.user = user});
+    this.socketService.getChannels((userChannels) => {this.channels = userChannels});
   }
 
-  // test(){
-  //   this.socketService.sendMessage(function(data){
-  //     console.log(data)
-  //   })
-  // }
+  logout(){
+    sessionStorage.clear();
+    this.user = {};
+    this.router.navigateByUrl('/');
+  }
+
+  joinGroup(groupList){
+    console.log(groupList)
+    this.socketService.joinGroup(groupList);
+  }
+
 }
