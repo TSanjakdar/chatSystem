@@ -3,32 +3,33 @@
 </div>
 <div id='toolbar'>
   <!-- welcome message -->
-  <div id='c1'>
-    <span id='welcomeMessage' *ngIf="user.username">Welcome {{user.username}}</span>
+  <div id='c1' class='col'>
+    <span id='welcomeMessage' *ngIf="user.username">Welcome {{user.username}}</span><br>
+    <button id='logoutButton' *ngIf="user.username" (click)='logout()'>Logout</button>
   </div>
 
   <!-- group select -->
-  <div id='c2'>
+  <div id='c2' class='col'>
     <select [(ngModel)]='groupList' name='groupList' *ngIf="user.username">
       <option [ngValue]='null'>Select Group</option>
-      <option *ngFor='let group of user.groups'>{{group}}</option>
+      <option *ngFor='let group of groups'>{{group}}</option>
     </select><br>
-    <button id='joinGroupButton' (click)='joinGroup()'>Join Group</button>
-    <button id='createGroupButton' (click)='test()' *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'" >Create Group</button>
+    <button id='joinGroupButton' class='button' (click)='joinGroup()' *ngIf="user.username">Join Group</button>
   </div>
 
   <!-- channel select -->
-  <div id='c3'>
+  <div id='c3' class='col'>
     <select [(ngModel)]='channelList' name='channelList' *ngIf="user.username && channels.length >= 1">
       <option [ngValue]='null'>Select channel</option>
       <option *ngFor='let channel of channels'>{{channel}}</option>
     </select><br>
-    <button id='createchannelButton' (click)='test()' *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'" >Create Channel</button>
+    <button id='joinChannelButton' class='button' (click)='joinChannel()' *ngIf="user.username && channels.length >= 1">Join Channel</button>
   </div>
 
-  <!-- loggout button -->
-  <div id='c4'>
-    <button id='logoutButton' *ngIf="user.username" (click)='logout()'>Logout</button>
+  <!-- channel select -->
+  <div id='c4' class='col'>
+    <button id='enterChatButton' class='button' (click)='enterChat()' *ngIf="!inChannel && channelList">Enter Chat</button>
+    <button id='leaveChatButton' class='button' (click)='leaveChat()' *ngIf="inChannel">Leave Chat</button>
   </div>
 
 </div>

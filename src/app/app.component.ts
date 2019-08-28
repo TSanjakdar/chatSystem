@@ -12,13 +12,16 @@ export class AppComponent {
   
   user = {};
   inGroup = '';
+  groups = [];
+  groupList = '';
+  inChannel = '';
   channels = [];
-  group = '';
   channelList = '';
 
   ngOnInit() {
     this.socketService.getUser((user) => {this.user = user});
     this.socketService.getChannels((userChannels) => {this.channels = userChannels});
+    this.socketService.getGroups((groups) => {this.groups = groups});
   }
 
   logout(){
@@ -27,9 +30,8 @@ export class AppComponent {
     this.router.navigateByUrl('/');
   }
 
-  joinGroup(groupList){
-    console.log(groupList)
-    this.socketService.joinGroup(groupList);
+  joinGroup(){
+    this.socketService.joinGroup(this.groupList);
   }
 
 }

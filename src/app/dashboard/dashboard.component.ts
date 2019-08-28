@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SocketService } from '../services/socket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,13 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  userRole = sessionStorage.getItem('role');
+  groups = [];
+
+  constructor(private socketService: SocketService, private router: Router) { }
 
   ngOnInit() {
-  }
-
-  test(){
-    console.log(sessionStorage.getItem('groups').split(',').length)
+    this.socketService.getGroups((groups) => {this.groups = groups});
   }
 
 }

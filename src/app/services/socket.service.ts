@@ -19,6 +19,10 @@ export class SocketService {
     this.socket.on('userLoggedIn', obj => user(obj));
   }
 
+  getGroups(groups){
+    this.socket.on('userGroups', array => groups(array));
+  }
+
   getChannels(list){
     this.socket.on('userChannels', channels => list(channels));
   }

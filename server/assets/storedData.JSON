@@ -1,26 +1,17 @@
 {
-    "users":[
-        {"username": "super", "email": "super@admin.com", "role": "superAdmin", "groups":["group1", "group2"]}
+    "users": [
+        {"username": "super", "email": "super@admin.com", "role": 1}
     ],
-    "groups":[
-        {"group1": [
-            {"members": ["super"]},
-            {"subgroup1": ["subchannel1"]},
-            "channel1",
-            {"subgroup2": ["subchannel2", "subchannel3"]}
-        ]},
-
-        {"group2": [
-            {"members": ["super"]},
-            {"subgroup3": ["subchannel4"]},
-            "channel2",
-            "channel3"
-        ]},
-
-        {"group3": [
-            {"members": []},
-            "channel4"
-        ]}
-        
+    "groups": [
+        {"name": "group1", "members": ["super"]},
+        {"name": "group2", "members": ["super"]},
+        {"name": "group3", "members": []}
+    ],
+    "channels": [
+        {"name": "channel1", "group": "group1", "members": ["super"]},
+        {"name": "channel2", "group": "group1", "members": ["super"]},
+        {"name": "channel3", "group": "group2", "members": []},
+        {"name": "channel4", "group": "group2", "members": ["super"]},
+        {"name": "channel5", "group": "group3", "members": []}
     ]
 }

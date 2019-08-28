@@ -1,2 +1,463 @@
-<h1>Dashboard</h1>
-<button (click)='test()'>button</button>
+<div id='dashTitle'><h1>Dashboard</h1></div>
+<!-- Super Admin Dashboard -->
+<div id='dashContent'>
+
+    <div id='superDash' *ngIf="userRole == 1">
+        <!-- USER SECTION (create, change role and delete) -->
+        <div id='userSection'>
+            <!-- Create new user -->
+            <div id='createUser'>
+                <h3>Create New User</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newUsername' name='newUsername'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newEmail' name='newEmail'>
+                    <span class="label">Email</span>
+                    <span class="border"></span>
+                </label><br>
+                <label class="selectionInput">
+                    <span class="boxLabel">Role</span><br>
+                    <select [(ngModel)]='newRole' name='newRole'>
+                        <option [ngValue]='null'>Select Role</option>
+                        <option>Super Admin</option>
+                        <option>Group Admin</option>
+                        <option>Group Assist</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='createUser()'>Create</button>
+            </div>
+            <!-- Change user's role -->
+            <div id='changeRole'>
+                <h3>Change User's Role</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Username</span><br>
+                    <select [(ngModel)]='updatedUser' name='updatedUser'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of users">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <label class="selectionInput">
+                    <span class="boxLabel">Role</span><br>
+                    <select [(ngModel)]='changedRole' name='changedRole'>
+                        <option [ngValue]='null'>Select Role</option>
+                        <option>Super Admin</option>
+                        <option>Group Admin</option>
+                        <option>Group Assist</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='changeUserRole()'>Update</button>
+            </div>
+            <!-- delete user -->
+            <div id='deleteUser'>
+                <h3>Delete User</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Username</span><br>
+                    <select [(ngModel)]='deletedUser' name='deletedUser'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of users">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteUser()'>Delete</button>
+            </div>
+        </div>
+
+        <!-- GROUP SECTION (create, invite/remove and delete) -->
+        <div id='groupSection'>
+            <!-- create group -->
+            <div id='createGroup'>
+                <h3>Create New Group</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newGroupName' name='newGroupName'>
+                    <span class="label">Group Name</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='createGroup()'>Create</button>
+            </div>
+            <!-- delete group -->
+            <div id='deleteGroup'>
+                <h3>Delete a Group</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Group Name</span><br>
+                    <select [(ngModel)]='groupToDelete' name='groupToDelete'>
+                        <option [ngValue]='null'>Select Group</option>
+                        <option *ngFor="let group of groups">{{group}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteGroup()'>Delete</button>
+            </div>
+            <!-- invite to group -->
+            <div id='inviteToGroup' *ngIf='inGroup'>
+                <h3>Invite User to Group</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='userToGroup' name='userToGroup'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='inviteToGroup()'>Invite</button>
+            </div>
+            <!-- remove from group -->
+            <div id='inviteToGroup' *ngIf='inGroup'>
+                <h3>Remove User from Group</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Users</span><br>
+                    <select [(ngModel)]='removeFromGroup' name='removeFromGroup'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of usersInGroup">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteGroup()'>Delete</button>
+            </div>
+        </div>
+
+        <!-- CHANNEL SECTION (create, invite/remove and delete) -->
+        <div id='channelSection'>
+            <!-- create channel -->
+            <div id='createChannel'>
+                <h3>Create New Channel</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newGroupName' name='newGroupName'>
+                    <span class="label">Group Name</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='createGroup()'>Create</button>
+            </div>
+            <!-- delete Channel -->
+            <div id='deleteChannel'>
+                <h3>Delete a Channel</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Channel Name</span><br>
+                    <select [(ngModel)]='channelToDelete' name='channelToDelete'>
+                        <option [ngValue]='null'>Select Channel</option>
+                        <option *ngFor="let channel of channels">{{channel}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteChannel()'>Delete</button>
+            </div>
+            <!-- invite to Channel -->
+            <div id='inviteToChannel' *ngIf='inChannel'>
+                <h3>Invite User to Channel</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='userToChannel' name='userToChannel'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='inviteToChannel()'>Invite</button>
+            </div>
+            <!-- remove from Channel -->
+            <div id='inviteToChannel' *ngIf='inChannel'>
+                <h3>Remove User from Channel</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Users</span><br>
+                    <select [(ngModel)]='removeFromChannel' name='removeFromChannel'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of usersInChannel">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteChannel()'>Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id='adminDash' *ngIf="userRole == 2">
+        <!-- USER SECTION (create, change role and delete) -->
+        <div id='userSection'>
+            <!-- Create new user -->
+            <div id='createUser'>
+                <h3>Create New User</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newUsername' name='newUsername'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newEmail' name='newEmail'>
+                    <span class="label">Email</span>
+                    <span class="border"></span>
+                </label><br>
+                <label class="selectionInput">
+                    <span class="boxLabel">Role</span><br>
+                    <select [(ngModel)]='newRole' name='newRole'>
+                        <option [ngValue]='null'>Select Role</option>
+                        <option>Group Admin</option>
+                        <option>Group Assist</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='createUser()'>Create</button>
+            </div>
+            <!-- Change user's role -->
+            <div id='changeRole'>
+                <h3>Change User's Role</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Username</span><br>
+                    <select [(ngModel)]='updatedUser' name='updatedUser'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of users">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <label class="selectionInput">
+                    <span class="boxLabel">Role</span><br>
+                    <select [(ngModel)]='changedRole' name='changedRole'>
+                        <option [ngValue]='null'>Select Role</option>
+                        <option>Group Admin</option>
+                        <option>Group Assist</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='changeUserRole()'>Update</button>
+            </div>
+            <!-- delete user -->
+            <div id='deleteUser'>
+                <h3>Delete User</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Username</span><br>
+                    <select [(ngModel)]='deletedUser' name='deletedUser'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of users">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteUser()'>Delete</button>
+            </div>
+        </div>
+
+        <!-- GROUP SECTION (create, invite/remove and delete) -->
+        <div id='groupSection'>
+            <!-- create group -->
+            <div id='createGroup'>
+                <h3>Create New Group</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newGroupName' name='newGroupName'>
+                    <span class="label">Group Name</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='createGroup()'>Create</button>
+            </div>
+            <!-- delete group -->
+            <div id='deleteGroup'>
+                <h3>Delete a Group</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Group Name</span><br>
+                    <select [(ngModel)]='groupToDelete' name='groupToDelete'>
+                        <option [ngValue]='null'>Select Group</option>
+                        <option *ngFor="let group of groups">{{group}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteGroup()'>Delete</button>
+            </div>
+            <!-- invite to group -->
+            <div id='inviteToGroup' *ngIf='inGroup'>
+                <h3>Invite User to Group</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='userToGroup' name='userToGroup'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='inviteToGroup()'>Invite</button>
+            </div>
+            <!-- remove from group -->
+            <div id='inviteToGroup' *ngIf='inGroup'>
+                <h3>Remove User from Group</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Users</span><br>
+                    <select [(ngModel)]='removeFromGroup' name='removeFromGroup'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of usersInGroup">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteGroup()'>Delete</button>
+            </div>
+        </div>
+
+        <!-- CHANNEL SECTION (create, invite/remove and delete) -->
+        <div id='channelSection'>
+            <!-- create channel -->
+            <div id='createChannel'>
+                <h3>Create New Channel</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newGroupName' name='newGroupName'>
+                    <span class="label">Group Name</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='createGroup()'>Create</button>
+            </div>
+            <!-- delete Channel -->
+            <div id='deleteChannel'>
+                <h3>Delete a Channel</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Channel Name</span><br>
+                    <select [(ngModel)]='channelToDelete' name='channelToDelete'>
+                        <option [ngValue]='null'>Select Channel</option>
+                        <option *ngFor="let channel of channels">{{channel}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteChannel()'>Delete</button>
+            </div>
+            <!-- invite to Channel -->
+            <div id='inviteToChannel' *ngIf='inChannel'>
+                <h3>Invite User to Channel</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='userToChannel' name='userToChannel'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='inviteToChannel()'>Invite</button>
+            </div>
+            <!-- remove from Channel -->
+            <div id='inviteToChannel' *ngIf='inChannel'>
+                <h3>Remove User from Channel</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Users</span><br>
+                    <select [(ngModel)]='removeFromChannel' name='removeFromChannel'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of usersInChannel">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteChannel()'>Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id='assistDash' *ngIf="userRole == 3">
+        <!-- USER SECTION (create, change role and delete) -->
+        <div id='userSection'>
+            <!-- Create new user -->
+            <div id='createUser'>
+                <h3>Create New User</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newUsername' name='newUsername'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newEmail' name='newEmail'>
+                    <span class="label">Email</span>
+                    <span class="border"></span>
+                </label><br>
+                <label class="selectionInput">
+                    <span class="boxLabel">Role</span><br>
+                    <select [(ngModel)]='newRole' name='newRole'>
+                        <option [ngValue]='null'>Select Role</option>
+                        <option>Group Assist</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='createUser()'>Create</button>
+            </div>
+            <!-- Change user's role -->
+            <div id='changeRole'>
+                <h3>Change User's Role</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Username</span><br>
+                    <select [(ngModel)]='updatedUser' name='updatedUser'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of users">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <label class="selectionInput">
+                    <span class="boxLabel">Role</span><br>
+                    <select [(ngModel)]='changedRole' name='changedRole'>
+                        <option [ngValue]='null'>Select Role</option>
+                        <option>Group Assist</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='changeUserRole()'>Update</button>
+            </div>
+        </div>
+
+        <!-- GROUP SECTION (invite/remove) -->
+        <div id='groupSection'>
+            <!-- invite to group -->
+            <div id='inviteToGroup' *ngIf='inGroup'>
+                <h3>Invite User to Group</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='userToGroup' name='userToGroup'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='inviteToGroup()'>Invite</button>
+            </div>
+            <!-- remove from group -->
+            <div id='inviteToGroup' *ngIf='inGroup'>
+                <h3>Remove User from Group</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Users</span><br>
+                    <select [(ngModel)]='removeFromGroup' name='removeFromGroup'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of usersInGroup">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteGroup()'>Delete</button>
+            </div>
+        </div>
+
+        <!-- CHANNEL SECTION (create, invite/remove and delete) -->
+        <div id='channelSection'>
+            <!-- create channel -->
+            <div id='createChannel'>
+                <h3>Create New Channel</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='newGroupName' name='newGroupName'>
+                    <span class="label">Group Name</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='createGroup()'>Create</button>
+            </div>
+            <!-- delete Channel -->
+            <div id='deleteChannel'>
+                <h3>Delete a Channel</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Channel Name</span><br>
+                    <select [(ngModel)]='channelToDelete' name='channelToDelete'>
+                        <option [ngValue]='null'>Select Channel</option>
+                        <option *ngFor="let channel of channels">{{channel}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteChannel()'>Delete</button>
+            </div>
+            <!-- invite to Channel -->
+            <div id='inviteToChannel' *ngIf='inChannel'>
+                <h3>Invite User to Channel</h3>
+                <label class="input">
+                    <input type="text" [(ngModel)]='userToChannel' name='userToChannel'>
+                    <span class="label">Username</span>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='inviteToChannel()'>Invite</button>
+            </div>
+            <!-- remove from Channel -->
+            <div id='inviteToChannel' *ngIf='inChannel'>
+                <h3>Remove User from Channel</h3>
+                <label class="selectionInput">
+                    <span class="boxLabel">Users</span><br>
+                    <select [(ngModel)]='removeFromChannel' name='removeFromChannel'>
+                        <option [ngValue]='null'>Select User</option>
+                        <option *ngFor="let user of usersInChannel">{{user}}</option>
+                    </select>
+                    <span class="border"></span>
+                </label><br>
+                <button (click)='deleteChannel()'>Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
