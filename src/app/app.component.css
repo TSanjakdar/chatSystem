@@ -1,5 +1,5 @@
 #toolbar{
-    background-color: red;
+    background-color: rgb(61, 104, 196);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     position: fixed;
     display: flex;
@@ -13,12 +13,12 @@ select{
     height: 30px;
 }
 #c1{
-    font-size: 20px;
+    font-size: 24px;
     float: left;
     width: 200px;
     margin-right: auto;
     margin-left: 10px;
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: left;
 }
 #c2{
@@ -44,11 +44,11 @@ select{
     width: 200px;
     margin-left: auto;
     margin-right: 10px;
-    margin-top: -60px;
+    margin-top: 20px;
     text-align: right;
 }
 #container{
-    background-color: aquamarine;
+    background-color: rgb(129, 168, 252);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     position: fixed;
     display: table;

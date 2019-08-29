@@ -1,17 +1,1 @@
-{
-    "users": [
-        {"username": "super", "email": "super@admin.com", "role": 1}
-    ],
-    "groups": [
-        {"name": "group1", "members": ["super"]},
-        {"name": "group2", "members": ["super"]},
-        {"name": "group3", "members": []}
-    ],
-    "channels": [
-        {"name": "channel1", "group": "group1", "members": ["super"]},
-        {"name": "channel2", "group": "group1", "members": ["super"]},
-        {"name": "channel3", "group": "group2", "members": []},
-        {"name": "channel4", "group": "group2", "members": ["super"]},
-        {"name": "channel5", "group": "group3", "members": []}
-    ]
-}
+{"users":[{"username":"super","email":"super@admin.com","role":3},{"username":"Tariq","email":"tariq@email.com","role":2},{"username":"newUser","email":"new@user.com","role":1}],"groups":[{"name":"group1","members":["super","test"]},{"name":"group2","members":["super","newUser","test"]},{"name":"group3","members":[]},{"name":"test","members":["super","Tariq"]}],"channels":[{"name":"channel1","group":"group1","members":["super","test"]},{"name":"channel2","group":"group1","members":["super"]},{"name":"channel3","group":"group2","members":[]},{"name":"channel4","group":"group2","members":["super","test"]},{"name":"channel5","group":"group3","members":[]},{"name":"testChannel","group":"test","members":["super"]},{"name":"anotherTest","group":"test","members":["newUser"]}]}

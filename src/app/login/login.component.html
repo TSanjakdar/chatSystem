@@ -1,4 +1,8 @@
 <div id='login'>
-    <p><input [(ngModel)]='username' name='username' id='loginInput'></p>
+    <label class="input">
+        <input [(ngModel)]='username' name='username' id='loginInput'>
+        <span class="label">Username</span>
+        <span class="border"></span>
+    </label><br>
     <button id='loginButton' (click)='login(username)'>Login</button>
 </div>

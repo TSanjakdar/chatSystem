@@ -19,17 +19,17 @@
 
   <!-- channel select -->
   <div id='c3' class='col'>
-    <select [(ngModel)]='channelList' name='channelList' *ngIf="user.username && channels.length >= 1">
+    <select [(ngModel)]='channelList' name='channelList' *ngIf="user.username && inGroup">
       <option [ngValue]='null'>Select channel</option>
       <option *ngFor='let channel of channels'>{{channel}}</option>
     </select><br>
-    <button id='joinChannelButton' class='button' (click)='joinChannel()' *ngIf="user.username && channels.length >= 1">Join Channel</button>
+    <button id='joinChannelButton' class='button' (click)='joinChannel()' *ngIf="user.username && inGroup">Join Channel</button>
   </div>
 
   <!-- channel select -->
   <div id='c4' class='col'>
-    <button id='enterChatButton' class='button' (click)='enterChat()' *ngIf="!inChannel && channelList">Enter Chat</button>
-    <button id='leaveChatButton' class='button' (click)='leaveChat()' *ngIf="inChannel">Leave Chat</button>
+    <button id='enterChatButton' class='button' (click)='enterChat()' *ngIf="inChannel">Enter Chat</button>
+    <button id='leaveChatButton' class='button' (click)='leaveChat()' *ngIf="chatJoined">Leave Chat</button>
   </div>
 
 </div>

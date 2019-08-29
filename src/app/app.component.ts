@@ -22,16 +22,28 @@ export class AppComponent {
     this.socketService.getUser((user) => {this.user = user});
     this.socketService.getChannels((userChannels) => {this.channels = userChannels});
     this.socketService.getGroups((groups) => {this.groups = groups});
+    this.socketService.groupJoined((group) => {this.inGroup = group});
+    this.socketService.channelJoined((channel) => {this.inChannel = channel});
   }
 
   logout(){
     sessionStorage.clear();
     this.user = {};
+    this.inGroup = '';
+    this.inChannel = '';
     this.router.navigateByUrl('/');
   }
 
   joinGroup(){
     this.socketService.joinGroup(this.groupList);
+  }
+
+  joinChannel(){
+    this.socketService.joinChannel(this.channelList);
+  }
+
+  enterChat(inChannel){
+
   }
 
 }
