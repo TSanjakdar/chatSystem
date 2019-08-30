@@ -16,15 +16,16 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  // function to login - data is collected from serverand then stored in local storage
   login(username){
     console.log('user is: ' + username)
     this.socketService.login(username, (user) => {
       if(user.valid){
         console.log(user)
         console.log('user valid');
-        sessionStorage.setItem('username', user.username);
-        sessionStorage.setItem('email', user.email);
-        sessionStorage.setItem('role', user.role);
+        localStorage.setItem('username', user.username);
+        localStorage.setItem('email', user.email);
+        localStorage.setItem('role', user.role);
         this.router.navigateByUrl("/dash");
       }
       else{

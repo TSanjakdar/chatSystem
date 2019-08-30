@@ -26,9 +26,9 @@
     <button id='joinChannelButton' class='button' (click)='joinChannel()' *ngIf="user.username && inGroup">Join Channel</button>
   </div>
 
-  <!-- channel select -->
+  <!-- enter/leave chat button -->
   <div id='c4' class='col'>
-    <button id='enterChatButton' class='button' (click)='enterChat()' *ngIf="inChannel">Enter Chat</button>
+    <button id='enterChatButton' class='button' (click)='enterChat()' *ngIf="inChannel && !chatJoined">Enter Chat</button>
     <button id='leaveChatButton' class='button' (click)='leaveChat()' *ngIf="chatJoined">Leave Chat</button>
   </div>
 

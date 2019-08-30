@@ -153,7 +153,7 @@ module.exports = {
                 });
             });
 
-            // delete user
+            // delete user - user also removed from groups and channels
             socket.on('deleteUser', (userToDelete) => {
                 for(i=0; i<storedData.users.length; i++){
                     if(userToDelete == storedData.users[i].username){

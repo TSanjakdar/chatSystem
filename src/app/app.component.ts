@@ -17,6 +17,7 @@ export class AppComponent {
   inChannel = '';
   channels = [];
   channelList = '';
+  chatJoined = false;
 
   ngOnInit() {
     this.socketService.getUser((user) => {this.user = user});
@@ -27,7 +28,7 @@ export class AppComponent {
   }
 
   logout(){
-    sessionStorage.clear();
+    localStorage.clear();
     this.user = {};
     this.inGroup = '';
     this.inChannel = '';
@@ -42,8 +43,14 @@ export class AppComponent {
     this.socketService.joinChannel(this.channelList);
   }
 
-  enterChat(inChannel){
+  enterChat(){
+    this.router.navigateByUrl('/chat');
+    this.chatJoined = true;
+  }
 
+  leaveChat(){
+    this.router.navigateByUrl('/dash');
+    this.chatJoined = false;
   }
 
 }

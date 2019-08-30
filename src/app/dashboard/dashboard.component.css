@@ -60,10 +60,10 @@ h1{
 }
 .input .border{
     position: absolute;
-    bottom: 0;
+    bottom: -2px;
     left: 0;
     height: 2px;
-    width: 150px;
+    width: 100%;
     background: #172B54;
     transform: scaleX(0);
     transform-origin: 0 0;
