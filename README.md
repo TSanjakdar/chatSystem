@@ -30,4 +30,6 @@ Within the application data is communicated through routes, each route is listen
 
 | Route | Parameters | Description | Return Values |
 | --- | --- | --- | --- |
-| login | username | Empties 'userGroups', 'allGroups' and 'userList' arrays, iterate through users stored in JSON file, compare username parameter to stored users usernames. If matched, add stored user data to user object with a valid parameter of true and emit userLoggedIn route. Iterate through all stored groups, add each group name to 'allGroups', check if current username in group, if so, add group name to 'userGroups' array. Emit allGroups, userGroups and getUsers. | user |
+| update | userList, userGroups, allGroups, userChannels | Empty userList, iterate through
+| login | username, user, userGroups, allGroups, userList | Empties userGroups, allGroups and userList arrays, iterate through users stored in JSON file, compare username parameter to stored users usernames. If matched, add stored user data to user object with a valid parameter of true and emit userLoggedIn route. Iterate through all stored groups, add each group name to allGroups, check if current username in group, if so, add group name to userGroups array. Emit allGroups, userGroups and getUsers. | user |
+|
