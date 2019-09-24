@@ -116,7 +116,6 @@ module.exports = {
             // join a channel from toolbar
             socket.on('joinChannel', (channel) => {
                 inChannel = channel;
-                usersInChannel = [];
                 // refresh list of users in channel
                 usersInChannel = [];
                 for(i=0; i<storedData.channels.length; i++){
