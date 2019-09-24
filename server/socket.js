@@ -1,18 +1,9 @@
-const fs = require('fs');
-
 module.exports = {
-    connect: (io) => {
+    connect: (io, db) => {
 
-        // read JSON
-        var storedData;
-        fs.readFile('./assets/storedData.JSON', (err, data) => {
-            if(err) throw(err);
-            storedData = JSON.parse(data);
-            console.log(storedData);
-        });
-        
         var user = {};
         user.username = '';
+        user.password = '';
         user.email = '';
         user.role;
         user.valid = false;
@@ -21,6 +12,20 @@ module.exports = {
         var userChannels = [];
         var inChannel = '';
         var inGroup = '';
+
+        userCollection = db.collection('users');
+        groupCollection = db.collection('groups');
+        channelCollection = db.collection('channels');
+        chatCollection = db.collection('chats');
+
+        //--------------- OLD ---------------//
+        // read JSON
+        var storedData;
+        fs.readFile('./assets/storedData.JSON', (err, data) => {
+            if(err) throw(err);
+            storedData = JSON.parse(data);
+            console.log(storedData);
+        });
 
         var chat = io.of('/chat');
         chat.on('connection', (socket) => {
