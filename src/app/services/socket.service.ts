@@ -15,8 +15,8 @@ export class SocketService {
     this.socket.emit('update');
   }
 
-  login(username, user){
-    this.socket.emit('login', username, user);
+  login(username, password, user){
+    this.socket.emit('login', username, password, user);
   }
 
   getUser(user){

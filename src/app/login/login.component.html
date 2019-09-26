@@ -1,10 +1,15 @@
 <div id='container'>
     <div id='login'>
         <label class="input">
-            <input [(ngModel)]='username' name='username' id='loginInput'>
+            <input [(ngModel)]='username' name='username' id='loginUsernamInput'>
             <span class="label">Username</span>
             <span class="border"></span>
         </label><br>
-        <button id='loginButton' (click)='login(username)'>Login</button>
+        <label class="input">
+            <input [(ngModel)]='password' name='password' id='loginPasswordInput'>
+            <span class="label">Password</span>
+            <span class="border"></span>
+        </label><br>
+        <button id='loginButton' (click)='login(username, password)'>Login</button>
     </div>
 </div>   

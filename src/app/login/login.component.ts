@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   username = '';
+  password = '';
 
   constructor(private socketService: SocketService, private router: Router) { }
 
@@ -17,9 +18,9 @@ export class LoginComponent implements OnInit {
   }
 
   // function to login - data is collected from serverand then stored in local storage
-  login(username){
+  login(username, password){
     console.log('user is: ' + username)
-    this.socketService.login(username, (user) => {
+    this.socketService.login(username, password, (user) => {
       if(user.valid){
         console.log(user)
         console.log('user valid');
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit {
       else{
         console.log('user invalid');
         this.username = '';
-        alert("username doesn't exist");
+        this.password = '';
+        alert("credentials could not be validated, please check your username and password");
       }
     });
   }

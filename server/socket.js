@@ -1,9 +1,10 @@
+const fs = require('fs');
 module.exports = {
-    connect: (io, db) => {
+    connect: (io, User, Group, Channel, Chat) => {
 
         var user = {};
+        user.id = '';
         user.username = '';
-        user.password = '';
         user.email = '';
         user.role;
         user.valid = false;
@@ -13,18 +14,20 @@ module.exports = {
         var inChannel = '';
         var inGroup = '';
 
-        userCollection = db.collection('users');
-        groupCollection = db.collection('groups');
-        channelCollection = db.collection('channels');
-        chatCollection = db.collection('chats');
+        // USERS - _id:<objid>, username:'', password:'', email:'', role:#
+        var userCollection;
+        // GROUPS - _id:<objid>, name:'', members:[<objid>, <objid>...]
+        var groupCollection;
+        // CHANNELS - _id:<objid>, name:'', group:<objid>, members:[<objid>, <objid>...]
+        var channelCollection;
+        // CHATS - _id:<objid>, channel:<objid>, messages:[{username:<objid>, message:''}, {username:<objid>, message:''}...]
+        var chatCollection;
 
-        //--------------- OLD ---------------//
         // read JSON
         var storedData;
         fs.readFile('./assets/storedData.JSON', (err, data) => {
             if(err) throw(err);
             storedData = JSON.parse(data);
-            console.log(storedData);
         });
 
         var chat = io.of('/chat');
@@ -64,28 +67,60 @@ module.exports = {
             });
             
             // collect user data from JSON
-            socket.on('login', (username, res) => {
+            socket.on('login', async (username, password, res) => {
+                console.log('login started');
+                console.log('username is ' + username, 'password is ' + password);
                 userGroups = [];
                 allGroups = [];
                 userList = [];
-                for(i=0; i<storedData.users.length; i++){
-                    userList.push(storedData.users[i].username);
-                    if(storedData.users[i].username == username){
-                        user.valid = true;
-                        user.username = storedData.users[i].username;
-                        user.email = storedData.users[i].email;
-                        user.role = storedData.users[i].role;
-                        chat.emit('userLoggedIn', user);
+                await User.find({}, (err, res) => {
+                    if(err) return console.error(err);
+                    for(i = 0; i < res.length; i++){
+                        console.log(res[i]);
+                        userList.push(res[i].username);
+                        if(res[i].username == username && res[i].password == password){
+                            user.valid = true;
+                            user.username = res[i].username;
+                            user.email = res[i].email;
+                            user.role = res[i].role;
+                            user.id = res[i]._id
+                            chat.emit('userLoggedIn', user);
+                        }
                     }
-                }
+                });
+
+                // for(i=0; i<storedData.users.length; i++){
+                //     userList.push(storedData.users[i].username);
+                //     if(storedData.users[i].username == username){
+                //         user.valid = true;
+                //         user.username = storedData.users[i].username;
+                //         user.email = storedData.users[i].email;
+                //         user.role = storedData.users[i].role;
+                //         chat.emit('userLoggedIn', user);
+                //     }
+                // }
+
                 res(user);
+
                 // get groups user has been invited to for toolbar
-                for(i=0; i<storedData.groups.length; i++){
-                    allGroups.push(storedData.groups[i].name);
-                    if(storedData.groups[i].members.includes(user.username)){
-                        userGroups.push(storedData.groups[i].name)
+
+                await Group.find({}, (err, res) => {
+                    if(err) return console.error(err);
+                    for(i = 0; i < res.length; i++){
+                        allGroups.push(res[i].name);
+                        if(res[i].members.includes(user.id)){
+                            userGroups.push(res[i].name);
+                        }
                     }
-                }
+                });
+
+                // for(i=0; i<storedData.groups.length; i++){
+                //     allGroups.push(storedData.groups[i].name);
+                //     if(storedData.groups[i].members.includes(user.username)){
+                //         userGroups.push(storedData.groups[i].name)
+                //     }
+                // }
+
                 chat.emit('allGroups', allGroups);
                 chat.emit('userGroups', userGroups);
                 chat.emit('getUsers', userList);
