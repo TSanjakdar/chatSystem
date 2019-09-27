@@ -32,6 +32,7 @@ export class AppComponent {
     this.user = {};
     this.inGroup = '';
     this.inChannel = '';
+    this.socketService.logout();
     this.router.navigateByUrl('/');
   }
 

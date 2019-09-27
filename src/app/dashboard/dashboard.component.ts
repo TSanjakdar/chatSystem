@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit {
   // user section variables
   userGroups = [];
   newUsername = '';
+  newPassword = '';
   newEmail = '';
   newRole = '';
   updatedUser = '';
@@ -68,8 +69,9 @@ export class DashboardComponent implements OnInit {
       if(this.newRole == 'Super Admin'){
         role = 3;
       }
-      this.socketService.createUser(this.newUsername, this.newEmail, role);
+      this.socketService.createUser(this.newUsername, this.newPassword, this.newEmail, role);
       this.newUsername = '';
+      this.newPassword = '';
       this.newEmail = '';
       this.newRole = '';
       alert('New user has been created');

@@ -34,39 +34,75 @@ module.exports = {
         chat.on('connection', (socket) => {
 
             // Update fields
-            socket.on('update', () => {
+            socket.on('update', async () => {
                 // update list of all users
                 userList = [];
-                for(i=0; i<storedData.users.length; i++){
-                    userList.push(storedData.users[i].username);
-                }
+                await User.find({}, (err, res) => {
+                    if(err) return console.error(err);
+                    for(i = 0; i < res.length; i++){
+                        userList.push(res[i].username)
+                    }
+                });
+
+                // for(i=0; i<storedData.users.length; i++){
+                //     userList.push(storedData.users[i].username);
+                // }
                 chat.emit('getUsers', userList);
                 
                 // update lists of groups and groups user has access to
                 userGroups = [];
                 allGroups = [];
-                for(i=0; i<storedData.groups.length; i++){
-                    allGroups.push(storedData.groups[i].name);
-                    if(storedData.groups[i].members.includes(user.username)){
-                        userGroups.push(storedData.groups[i].name);
+
+                await Group.find({}, (err, res) => {
+                    if(err) return console.error(err);
+                    for(i = 0; i < res.length; i++){
+                        allGroups.push(res[i].name);
+                        if(res[i].members.includes(user.id)){
+                            userGroups.push(res[i].name);
+                        }
                     }
-                }
+                });
+                // for(i=0; i<storedData.groups.length; i++){
+                //     allGroups.push(storedData.groups[i].name);
+                //     if(storedData.groups[i].members.includes(user.username)){
+                //         userGroups.push(storedData.groups[i].name);
+                //     }
+                // }
                 chat.emit('userGroups', userGroups);
                 chat.emit('allGroups', allGroups);
 
                 // update lists of channels in current group
                 if(inGroup){
                     userChannels = [];
-                    for(i=0; i<storedData.channels.length; i++){
-                        if(storedData.channels[i].members.includes(user.username) && storedData.channels[i].group == inGroup){
-                            userChannels.push(storedData.channels[i].name);
+
+                    await Channel.find({}, (err, res) => {
+                        if(err) return console.error(err);
+                        for(i = 0; i < res.length; i++){
+                            if(res[i].members.includes(user.username) && res[i].group == inGroup){
+                                userChannels.push(res[i].name);
+                            }
                         }
-                    }
+                    })
+
+                    // for(i=0; i<storedData.channels.length; i++){
+                    //     if(storedData.channels[i].members.includes(user.username) && storedData.channels[i].group == inGroup){
+                    //         userChannels.push(storedData.channels[i].name);
+                    //     }
+                    // }
                     chat.emit('userChannels', userChannels);
                 }
             });
+
+            socket.on('logout', () => {
+                user = {};
+                user.id = '';
+                user.username = '';
+                user.email = '';
+                user.role;
+                user.valid = false;
+            });
             
-            // collect user data from JSON
+            // collect user data from DB
             socket.on('login', async (username, password, res) => {
                 console.log('login started');
                 console.log('username is ' + username, 'password is ' + password);
@@ -76,7 +112,6 @@ module.exports = {
                 await User.find({}, (err, res) => {
                     if(err) return console.error(err);
                     for(i = 0; i < res.length; i++){
-                        console.log(res[i]);
                         userList.push(res[i].username);
                         if(res[i].username == username && res[i].password == password){
                             user.valid = true;
@@ -127,95 +162,142 @@ module.exports = {
             });
 
             // when group is joined
-            socket.on('getChannels', (groupList) => {
+            socket.on('getChannels', async (groupList) => {
                 chat.emit('groupJoined', groupList);
                 inGroup = groupList;
                 userChannels = [];
                 usersInGroup = [];
-                // get all users in group for dashboard
-                for(i=0; i<storedData.groups.length; i++){
-                    if(storedData.groups[i].name == groupList){
-                        usersInGroup = storedData.groups[i].members;
+                let groupUserIds = [];
+                let groupId = '';
+                // get all users and channels in group for dashboard
+                await Group.findOne({name: inGroup}, (err, res) => {
+                    if(err) return console.error(err);
+                    groupId = res._id;
+                    groupUserIds = res.members;
+                });
+                await User.find({_id: {$in: groupUserIds}}, (err, res) => {
+                    if(err) return console.error(err);
+                    for(i = 0; i < res.length; i++){
+                        usersInGroup.push(res[i].username);
                     }
-                }
+                });
+                await Channel.find({group: groupId, members: user.id}, (err, res) => {
+                    if(err) return console.error(err);
+                    for(i = 0; i < res.length; i++){
+                        userChannels.push(res[i].name);
+                    }
+                });
+
+                // for(i=0; i<storedData.groups.length; i++){
+                //     if(storedData.groups[i].name == groupList){
+                //         usersInGroup = storedData.groups[i].members;
+                //     }
+                // }
+
                 // iterate through all channels
-                for(i=0; i<storedData.channels.length; i++){
-                    // check if channel is in selected group
-                    if(storedData.channels[i].group == groupList){
-                        // check if user is invited to channel
-                        if(storedData.channels[i].members.includes(user.username)){
-                            userChannels.push(storedData.channels[i].name);
-                        }
-                    }
-                }
+                // for(i=0; i<storedData.channels.length; i++){
+                //     // check if channel is in selected group
+                //     if(storedData.channels[i].group == groupList){
+                //         // check if user is invited to channel
+                //         if(storedData.channels[i].members.includes(user.username)){
+                //             userChannels.push(storedData.channels[i].name);
+                //         }
+                //     }
+                // }
                 chat.emit('getUsersInGroup', usersInGroup);
                 chat.emit('groupJoined', groupList);
                 chat.emit('userChannels', userChannels);
             });
 
             // join a channel from toolbar
-            socket.on('joinChannel', (channel) => {
+            socket.on('joinChannel', async (channel) => {
                 inChannel = channel;
-                // refresh list of users in channel
                 usersInChannel = [];
-                for(i=0; i<storedData.channels.length; i++){
-                    if(storedData.channels[i].name == inChannel && storedData.channels[i].group == inGroup){
-                        usersInChannel = storedData.channels[i].members;
+                let channelUserIds = [];
+                let channelId = '';
+
+                // get all users in channel
+                await Channel.findOne({name: inChannel}, (err, res) => {
+                    if(err) return console.error(err);
+                    channelId = res._id;
+                    channelUserIds = res.members;
+                });
+                await User.find({_id: {$in: channelUserIds}}, (err, res) => {
+                    if(err) return console.error(err);
+                    for(i = 0; i < res.length; i++){
+                        usersInChannel.push(res[i].username);
                     }
-                }
+                });
+                // refresh list of users in channel
+                // for(i=0; i<storedData.channels.length; i++){
+                //     if(storedData.channels[i].name == inChannel && storedData.channels[i].group == inGroup){
+                //         usersInChannel = storedData.channels[i].members;
+                //     }
+                // }
                 chat.emit('getUsersInChannel', usersInChannel);
                 chat.emit('channelJoined', channel);
             });
 
             // create new user
-            socket.on('createUser', (username, email, role) => {
-                let user = {"username": username, "email": email, "role": role};
-                storedData.users.push(user);
-                fs.writeFile('./assets/storedData.JSON', JSON.stringify(storedData), function(err){
-                    if(err){
-                        console.log('fail');
-                    }
-                });
+            socket.on('createUser', async (newUsername, newPassword, newEmail, newRole) => {
+                let user = await new User({username: newUsername, password: newPassword, email: newEmail, role: newRole});
+                user.save();
+
+                // storedData.users.push(user);
+                // fs.writeFile('./assets/storedData.JSON', JSON.stringify(storedData), function(err){
+                //     if(err){
+                //         console.log('fail');
+                //     }
+                // });
             });
 
             // change user's role
             socket.on('editUser', (userToEdit, updatedRole) => {
-                for(i=0; i<storedData.users.length; i++){
-                    if(userToEdit == storedData.users[i].username){
-                        storedData.users[i].role = updatedRole;
-                    }
-                };
-                fs.writeFile('./assets/storedData.JSON', JSON.stringify(storedData), function(err){
-                    if(err){
-                        console.log('fail');
-                    }
-                });
+                User.findOneAndUpdate({username: userToEdit}, {role: updatedRole});
+                // for(i=0; i<storedData.users.length; i++){
+                //     if(userToEdit == storedData.users[i].username){
+                //         storedData.users[i].role = updatedRole;
+                //     }
+                // };
+                // fs.writeFile('./assets/storedData.JSON', JSON.stringify(storedData), function(err){
+                //     if(err){
+                //         console.log('fail');
+                //     }
+                // });
             });
 
             // delete user - user also removed from groups and channels
-            socket.on('deleteUser', (userToDelete) => {
-                for(i=0; i<storedData.users.length; i++){
-                    if(userToDelete == storedData.users[i].username){
-                        storedData.users.splice(i, 1);
-                    }
-                };
-                for(i=0; i<storedData.groups.length; i++){
-                    if(storedData.groups[i].members.includes(userToDelete)){
-                        userIndex = storedData.groups[i].members.indexOf(userToDelete);
-                        storedData.groups[i].members.splice(userIndex, 1);
-                    }
-                };
-                for(i=0; i<storedData.channels.length; i++){
-                    if(storedData.channels[i].members.includes(userToDelete)){
-                        userIndex = storedData.channels[i].members.indexOf(userToDelete);
-                        storedData.channels[i].members.splice(userIndex, 1);
-                    }
-                };
-                fs.writeFile('./assets/storedData.JSON', JSON.stringify(storedData), function(err){
-                    if(err){
-                        console.log('fail');
-                    }
+            socket.on('deleteUser', async (userToDelete) => {
+                let deltedUsersId = '';
+                await User.findOneAndDelete({username: userToDelete}, (err, res) => {
+                    if(err) return console.error(err);
+                    deltedUsersId = res._id;
                 });
+                Group.update({}, {$pullAll:{members: deltedUsersId}});
+                Channel.update({}, {$pullAll:{members: deltedUsersId}});
+
+                // for(i=0; i<storedData.users.length; i++){
+                //     if(userToDelete == storedData.users[i].username){
+                //         storedData.users.splice(i, 1);
+                //     }
+                // };
+                // for(i=0; i<storedData.groups.length; i++){
+                //     if(storedData.groups[i].members.includes(userToDelete)){
+                //         userIndex = storedData.groups[i].members.indexOf(userToDelete);
+                //         storedData.groups[i].members.splice(userIndex, 1);
+                //     }
+                // };
+                // for(i=0; i<storedData.channels.length; i++){
+                //     if(storedData.channels[i].members.includes(userToDelete)){
+                //         userIndex = storedData.channels[i].members.indexOf(userToDelete);
+                //         storedData.channels[i].members.splice(userIndex, 1);
+                //     }
+                // };
+                // fs.writeFile('./assets/storedData.JSON', JSON.stringify(storedData), function(err){
+                //     if(err){
+                //         console.log('fail');
+                //     }
+                // });
             });
 
             // create new group - current user automatically added to list of invited users

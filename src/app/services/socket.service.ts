@@ -19,6 +19,10 @@ export class SocketService {
     this.socket.emit('login', username, password, user);
   }
 
+  logout(){
+      this.socket.emit('logout');
+  }
+
   getUser(user){
     this.socket.on('userLoggedIn', obj => user(obj));
   }
@@ -51,8 +55,8 @@ export class SocketService {
     this.socket.on('channelJoined', inChannel => channel(inChannel));
   }
 
-  createUser(username, email, role){
-    this.socket.emit('createUser', username, email, role);
+  createUser(username, password, email, role){
+    this.socket.emit('createUser', username, password, email, role);
     this.updateFields();
   }
 
