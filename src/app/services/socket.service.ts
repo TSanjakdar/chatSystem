@@ -117,4 +117,17 @@ export class SocketService {
   getUsersInChannel(usersInChannel){
     this.socket.on('getUsersInChannel', users => usersInChannel(users));
   }
+  sendMessage(message, inChannel){
+    this.socket.emit('message', message, inChannel);
+  }
+
+  getChat(chat){
+    this.socket.on('message', (message, inChannel) => {
+        let user = localStorage.getItem('username')
+        let currentChannel = localStorage.getItem(user + 'channel');
+        if(currentChannel == inChannel){
+            chat(message, inChannel)
+        }
+    });
+  }
 }

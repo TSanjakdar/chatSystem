@@ -8,50 +8,52 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private socketService: SocketService, private router: Router){}
-  
-  user = {};
-  inGroup = '';
-  groups = [];
-  groupList = '';
-  inChannel = '';
-  channels = [];
-  channelList = '';
-  chatJoined = false;
+    constructor(private socketService: SocketService, private router: Router){}
+    
+    user = {};
+    inGroup = '';
+    groups = [];
+    groupList = '';
+    inChannel = '';
+    channels = [];
+    channelList = '';
+    chatJoined = false;
 
-  ngOnInit() {
-    this.socketService.getUser((user) => {this.user = user});
-    this.socketService.getChannels((userChannels) => {this.channels = userChannels});
-    this.socketService.getGroups((groups) => {this.groups = groups});
-    this.socketService.groupJoined((group) => {this.inGroup = group});
-    this.socketService.channelJoined((channel) => {this.inChannel = channel});
-  }
+    ngOnInit() {
+        this.socketService.getUser((user) => {this.user = user});
+        this.socketService.getChannels((userChannels) => {this.channels = userChannels});
+        this.socketService.getGroups((groups) => {this.groups = groups});
+        this.socketService.groupJoined((group) => {this.inGroup = group});
+        this.socketService.channelJoined((channel) => {this.inChannel = channel});
+    }
 
-  logout(){
-    localStorage.clear();
-    this.user = {};
-    this.inGroup = '';
-    this.inChannel = '';
-    this.socketService.logout();
-    this.router.navigateByUrl('/');
-  }
+    logout(){
+        localStorage.clear();
+        this.user = {};
+        this.inGroup = '';
+        this.inChannel = '';
+        this.socketService.logout();
+        this.router.navigateByUrl('/');
+    }
 
-  joinGroup(){
-    this.socketService.joinGroup(this.groupList);
-  }
+    joinGroup(){
+        this.socketService.joinGroup(this.groupList);
+    }
 
-  joinChannel(){
-    this.socketService.joinChannel(this.channelList);
-  }
+    joinChannel(){
+        let currentUser = localStorage.getItem('username');
+        this.socketService.joinChannel(this.channelList);
+        localStorage.setItem(currentUser + 'channel', this.channelList);
+    }
 
-  enterChat(){
-    this.router.navigateByUrl('/chat');
-    this.chatJoined = true;
-  }
+    enterChat(){
+        this.router.navigateByUrl('/chat');
+        this.chatJoined = true;
+    }
 
-  leaveChat(){
-    this.router.navigateByUrl('/dash');
-    this.chatJoined = false;
-  }
+    leaveChat(){
+        this.router.navigateByUrl('/dash');
+        this.chatJoined = false;
+    }
 
 }

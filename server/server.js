@@ -46,10 +46,7 @@ db.once('open', () => {
 
     var chatsSchema = new Schema({
         channel: {type: Schema.Types.ObjectId, ref: 'Channel'},
-        messages: [{
-            user: {type: Schema.Types.ObjectId, ref: 'User'}, 
-            message: String
-        }]
+        messages: [{type: String}]
     });
     var Chat = mongoose.model('Chat', chatsSchema);
 

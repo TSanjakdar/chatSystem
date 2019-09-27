@@ -1,6 +1,10 @@
 <div id='container'>
-    <div id='feed'></div>
+    <div id='feed'>
+        <ul>
+            <li *ngFor='let c of chat' class='chatBubble'>{{c}}</li><br>
+        </ul>
+    </div>
     <div id='message'>
-        <input [(ngModel)]='message' name='message'><button>Send</button>
+        <input [(ngModel)]='message' name='message'><button type='submit' id='chatSend' (click)='sendMessage()'>Send</button>
     </div>
 </div>

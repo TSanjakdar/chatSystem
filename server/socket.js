@@ -350,6 +350,11 @@ module.exports = {
                 });
                 chat.emit('getUsersInChannel', usersInChannel);
             });
+
+            //chat
+            socket.on('message', (message, inChannel) => {
+                chat.emit('message', message, inChannel);
+            });
         });
     }
 }
