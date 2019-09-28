@@ -7,9 +7,10 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent{
     constructor(private socketService: SocketService, private router: Router){}
     
+    selectedImage;
     user = {};
     inGroup = '';
     groups = [];
@@ -58,5 +59,15 @@ export class AppComponent {
         this.chatJoined = false;
         this.socketService.exitChat(this.inChannel);
     }
+
+    // imageSelected(e){
+    //     var file = e.originalEvent.target.files[0], 
+    //     reader = new FileReader();
+    //     reader.onload = function(evt){
+    //         var jsonObject = {'imageData': evt.target.result}
+    //         console.log(jsonObject)
+    //     }
+    //     console.log(file)
+    // }
 
 }

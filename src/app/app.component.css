@@ -94,3 +94,44 @@ button:hover:before,button:hover:after{
     width:100%;
     transition:800ms ease all;
 }
+.input .label{
+    position: absolute;
+    top: 0px;
+    left: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    transform-origin: 0 0;
+    transition: all 0.2s ease;
+}
+.input .border{
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: #172B54;
+    transform: scaleX(0);
+    transform-origin: 0 0;
+    transition: all 0.15s ease;
+}
+.input input:hover + span + .border{
+    transition:800ms ease all;
+    transform: scaleX(1);
+}
+.input input + span, select + span{
+    color: #172B54;
+    transform: translateY(-26px) scale(0.85);
+    border-bottom: 1px solid #172B54;
+}
+.input input:focus{
+    background: none;
+    outline: none;
+}
+.input input:focus + span{
+    color: #172B54;
+    border-bottom: 1px solid #172B54;
+    transform: translateY(-26px) scale(0.85);
+}
+.input input:focus + span + .border{
+    transform: scaleX(1);
+}

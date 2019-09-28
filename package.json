@@ -22,6 +22,7 @@
     "mongodb": "^3.3.2",
     "rxjs": "~6.4.0",
     "socket.io": "^2.2.0",
+    "socketio-file-upload": "^0.7.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },

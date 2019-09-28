@@ -5,6 +5,7 @@ module.exports = {
         user.id = '';
         user.username = '';
         user.email = '';
+        user.picture = '';
         user.role;
         user.valid = false;
         var userList = [];
@@ -85,7 +86,8 @@ module.exports = {
                             user.username = res[i].username;
                             user.email = res[i].email;
                             user.role = res[i].role;
-                            user.id = res[i]._id
+                            user.picture = res[i].picture;
+                            user.id = res[i]._id;
                             chat.emit('userLoggedIn', user);
                         }
                     }

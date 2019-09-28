@@ -8,8 +8,6 @@ const server = require('./listen.js');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 var port = 3000;
-const MongoClient = require('mongodb').MongoClient;
-var  ObjectID = require('mongodb').ObjectID;
 
 app.use(bodyParser.json());
 app.use(cors());
