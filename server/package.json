@@ -4,7 +4,7 @@
   "description": "server for chat system",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./tests/test.js"
   },
   "author": "Tariq Sanjakdar",
   "license": "ISC",
@@ -16,5 +16,9 @@
     "mongoose": "^5.7.1",
     "socket.io": "^2.2.0",
     "socketio-file-upload": "^0.7.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0"
   }
 }

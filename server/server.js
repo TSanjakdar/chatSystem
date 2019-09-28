@@ -88,3 +88,4 @@ db.once('open', () => {
     server.listen(http, port);
 });
 
+module.exports = app;
