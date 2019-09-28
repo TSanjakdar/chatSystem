@@ -22,7 +22,7 @@ module.exports = {
                 userList = [];
                 await User.find({}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         userList.push(res[i].username)
                     }
                 });
@@ -34,7 +34,7 @@ module.exports = {
 
                 await Group.find({}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         allGroups.push(res[i].name);
                         if(res[i].members.includes(user.id)){
                             userGroups.push(res[i].name);
@@ -50,7 +50,7 @@ module.exports = {
 
                     await Channel.find({}, (err, res) => {
                         if(err) return console.error(err);
-                        for(i = 0; i < res.length; i++){
+                        for(let i = 0; i < res.length; i++){
                             if(res[i].members.includes(user.username) && res[i].group == inGroup){
                                 userChannels.push(res[i].name);
                             }
@@ -78,7 +78,7 @@ module.exports = {
                 userList = [];
                 await User.find({}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         userList.push(res[i].username);
                         if(res[i].username == username && res[i].password == password){
                             user.valid = true;
@@ -97,7 +97,7 @@ module.exports = {
 
                 await Group.find({}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         allGroups.push(res[i].name);
                         if(res[i].members.includes(user.id)){
                             userGroups.push(res[i].name);
@@ -127,13 +127,13 @@ module.exports = {
                     });
                     await User.find({_id: {$in: groupUserIds}}, (err, res) => {
                         if(err) return console.error(err);
-                        for(i = 0; i < res.length; i++){
+                        for(let i = 0; i < res.length; i++){
                             usersInGroup.push(res[i].username);
                         }
                     });
                     await Channel.find({group: groupId, members: user.id}, (err, res) => {
                         if(err) return console.error(err);
-                        for(i = 0; i < res.length; i++){
+                        for(let i = 0; i < res.length; i++){
                             userChannels.push(res[i].name);
                         }
                     });
@@ -159,7 +159,7 @@ module.exports = {
                     });
                     await User.find({_id: {$in: channelUserIds}}, (err, res) => {
                         if(err) return console.error(err);
-                        for(i = 0; i < res.length; i++){
+                        for(let i = 0; i < res.length; i++){
                             usersInChannel.push(res[i].username);
                         }
                     });
@@ -225,7 +225,7 @@ module.exports = {
                 });
                 await User.find({_id: {$in: groupUserIds}}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         usersInGroup.push(res[i].username);
                     }
                 });
@@ -251,7 +251,7 @@ module.exports = {
                 });
                 await User.find({_id: {$in: groupUserIds}}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         usersInGroup.push(res[i].username);
                     }
                 });
@@ -272,7 +272,7 @@ module.exports = {
 
                 await Channel.find({}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         if(res[i].members.includes(user.username) && res[i].group == inGroup){
                             userChannels.push(res[i].name);
                         }
@@ -289,7 +289,7 @@ module.exports = {
 
                 await Channel.find({}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         if(res[i].members.includes(user.username) && res[i].group == inGroup){
                             userChannels.push(res[i].name);
                         }
@@ -317,7 +317,7 @@ module.exports = {
                 });
                 await User.find({_id: {$in: channelUserIds}}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         usersInChannel.push(res[i].username);
                     }
                 });
@@ -328,6 +328,7 @@ module.exports = {
             socket.on('removeFromChannel', async (channelName, user) => {
                 let usersId = '';
                 await User.findOne({username: user}, (err, res) => {
+                    if(err) return console.error(err);
                     usersId = res._id;
                 });
                 await Channel.findOneAndUpdate({name: channelName}, {$pull: {members: usersId}}, () => {});
@@ -344,7 +345,7 @@ module.exports = {
                 });
                 await User.find({_id: {$in: channelUserIds}}, (err, res) => {
                     if(err) return console.error(err);
-                    for(i = 0; i < res.length; i++){
+                    for(let i = 0; i < res.length; i++){
                         usersInChannel.push(res[i].username);
                     }
                 });
@@ -352,10 +353,24 @@ module.exports = {
             });
 
             //chat
-            socket.on('chatJoined', async (channel) => {
+            socket.on('chatJoined', async (selectedChannel) => {
+                let chatHistory = [];
+                let channelid = '';
+                await Channel.findOne({name: selectedChannel}, (err, res) => {
+                    if(err) return console.error(err);
+                    channelid = res._id;
+                });
+                await Chat.findOne({channel: channelid}, (err, res) => {
+                    if(err) return console.error(err);
+                    try{
+                        chatHistory = res.messages;
+                    }
+                    catch{}
+                });
+                socket.join(selectedChannel);
+                chat.to(selectedChannel).emit('chatHistory', chatHistory);
                 let joinMsg = user.username + ' has joined the chat';
-                socket.join(channel);
-                chat.to(channel).emit('message', joinMsg);
+                chat.to(selectedChannel).emit('message', joinMsg);
             });
 
             socket.on('leftChat', (channel) => {
@@ -365,8 +380,19 @@ module.exports = {
             })
 
             socket.on('message', async (newMessage) => {
-                let newChatMessage = await new Chat({channel: inChannel, message: newMessage});
-                newChatMessage.save();
+                let channelid = '';
+                await Channel.findOne({name: inChannel}, (err, res) => {
+                    if(err) return console.error(err);
+                    channelid = res._id;
+                });
+                await Chat.findOneAndUpdate({channel: channelid}, {$push: {messages: newMessage}}, async (err, res) => {
+                    if(err) return console.error(err);
+                    if(res == null){
+                        let newChatMessage = await new Chat({channel: channelid, messages: newMessage});
+                        newChatMessage.save();
+                    }
+                });
+
                 chat.to(inChannel).emit('message', newMessage);
             });
         });

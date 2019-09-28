@@ -18,7 +18,7 @@ app.use(express.static('http://localhost:4200'));
 const url = 'mongodb://localhost:27017/chatdb';
 var Schema = mongoose.Schema;
 var db = mongoose.connection;
-mongoose.connect(url, {useNewUrlParser: true});
+mongoose.connect(url, {useNewUrlParser: true, useFindAndModify: false});
 db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', () => {
 
@@ -82,6 +82,9 @@ db.once('open', () => {
     // channel3.save();
     // channel4.save();
     // channel5.save();
+
+    var channel4Chats = new Chat({channel: channel4, messages:['this is a test message', 'and one more for good measure']});
+    // channel4Chats.save();
     
     sockets.connect(io, User, Group, Channel, Chat);
     server.listen(http, port);

@@ -133,4 +133,8 @@ export class SocketService {
     getChat(chat){
         this.socket.on('message', message => chat(message));
     }
+    
+    getChatHistory(chat){
+        this.socket.on('chatHistory', chatHistory => chat(chatHistory));
+    }
 }

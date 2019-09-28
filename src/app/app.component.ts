@@ -32,6 +32,7 @@ export class AppComponent {
         this.user = {};
         this.inGroup = '';
         this.inChannel = '';
+        this.chatJoined = false;
         this.socketService.logout();
         this.router.navigateByUrl('/');
     }
@@ -55,7 +56,7 @@ export class AppComponent {
     leaveChat(){
         this.router.navigateByUrl('/dash');
         this.chatJoined = false;
-        this.socketService.enterChat(this.inChannel);
+        this.socketService.exitChat(this.inChannel);
     }
 
 }

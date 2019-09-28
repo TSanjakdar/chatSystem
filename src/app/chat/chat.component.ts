@@ -13,6 +13,11 @@ export class ChatComponent implements OnInit {
     constructor(private socketService: SocketService) { }
 
     ngOnInit() {
+        this.socketService.getChatHistory((ch) => {
+            for(let i = 0; i < ch.length; i++){
+                this.chat.push(ch[i])
+            }
+        });
         this.socketService.getChat((c)=>this.chat.push(c));
     }
 
