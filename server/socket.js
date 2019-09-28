@@ -352,8 +352,22 @@ module.exports = {
             });
 
             //chat
-            socket.on('message', (message, inChannel) => {
-                chat.emit('message', message, inChannel);
+            socket.on('chatJoined', async (channel) => {
+                let joinMsg = user.username + ' has joined the chat';
+                socket.join(channel);
+                chat.to(channel).emit('message', joinMsg);
+            });
+
+            socket.on('leftChat', (channel) => {
+                let leftMsg = user.username + ' has left the chat';
+                chat.to(channel).emit('message', leftMsg);
+                socket.leave(channel);
+            })
+
+            socket.on('message', async (newMessage) => {
+                let newChatMessage = await new Chat({channel: inChannel, message: newMessage});
+                newChatMessage.save();
+                chat.to(inChannel).emit('message', newMessage);
             });
         });
     }

@@ -37,23 +37,25 @@ export class AppComponent {
     }
 
     joinGroup(){
+        this.inGroup = this.groupList;
         this.socketService.joinGroup(this.groupList);
     }
 
     joinChannel(){
-        let currentUser = localStorage.getItem('username');
+        this.inChannel = this.channelList;
         this.socketService.joinChannel(this.channelList);
-        localStorage.setItem(currentUser + 'channel', this.channelList);
     }
 
     enterChat(){
         this.router.navigateByUrl('/chat');
         this.chatJoined = true;
+        this.socketService.enterChat(this.inChannel);
     }
 
     leaveChat(){
         this.router.navigateByUrl('/dash');
         this.chatJoined = false;
+        this.socketService.enterChat(this.inChannel);
     }
 
 }

@@ -8,8 +8,6 @@ import { SocketService } from '../services/socket.service';
 })
 export class ChatComponent implements OnInit {
 
-    user = localStorage.getItem('username')
-    inChannel = localStorage.getItem(this.user+'channel');
     message = '';
     chat = [];
     constructor(private socketService: SocketService) { }
@@ -20,7 +18,7 @@ export class ChatComponent implements OnInit {
 
     sendMessage(){
         if(this.message){
-            this.socketService.sendMessage(this.message, this.inChannel);
+            this.socketService.sendMessage(this.message);
             this.message = '';
         }
         else{
