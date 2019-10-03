@@ -40,5 +40,20 @@ describe('server side socket testing', () => {
                 done();
             });
         });
+        it('object should contain specific properties', (done) => {
+            socketConnection.emit('login', 'Tariq', '123', (res) => {
+                expect(res).to.have.property('id');
+                expect(res).to.have.property('username');
+                expect(res).to.have.property('email');
+                expect(res).to.have.property('valid');
+                done();
+            });
+        });
+        it('valid should be true', (done) => {
+            socketConnection.emit('login', 'Tariq', '123', (res) => {
+                expect(res.valid).to.equal(true);
+                done();
+            });
+        });
     });
 });
