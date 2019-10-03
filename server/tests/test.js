@@ -5,28 +5,40 @@ const should = chai.should();
 const io = require('socket.io-client');
 
 var socketUrl = 'http://localhost:3000/chat';
-var socketConnection = io.connect(socketUrl);
 
 describe('server side socket testing', () => {
-    before(() => {
-        console.log('test starting');
-    });
-    after(() => {
-        console.log('test finished');
-    });
-    describe('logout endpoint', () => {
-        it('it should respond with status of 200', (done) => {
-            socketConnection.on('logout', function(res){
-                res.should.have.status(200);
-            });
-            socketConnection.disconnect();
+    var socketConnection;
+    beforeEach(function(done) {
+        socketConnection = io.connect(socketUrl, {
+            'reconnection delay' : 0
+            , 'reopen delay' : 0
+            , 'force new connection' : true
+        });
+        socketConnection.on('connect', function() {
+            console.log('connected');
             done();
         });
-        it('it should return an object', (done) => {
-            socketConnection.emit('something', function(res){
-            });
+        socketConnection.on('disconnect', function() {
+            console.log('disconnected');
+        })
+    });
+    afterEach(function(done) {
+        if(socketConnection.connected) {
+            console.log('disconnecting');
             socketConnection.disconnect();
-            done();
+        } 
+        else {
+            console.log('no connection');
+        }
+        done();
+    });
+
+    describe('login', () => {
+        it('it should respond with an object', (done) => {
+            socketConnection.emit('login', 'Tariq', '123', (res) => {
+                expect(res).to.be.a('object');
+                done();
+            });
         });
     });
 });
